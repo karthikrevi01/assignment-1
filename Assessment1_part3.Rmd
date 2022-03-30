@@ -1,0 +1,151 @@
+---
+title: "Assessment 1"
+author: "Karthik Revi s4644246"
+date: "03/26/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# RMarkdown editing
+
+
+**R Markdown**  R Markdown is a file format for making dynamic documents with R. An R Markdown document is written in markdown (an easy-to-write plain text format) and contains chunks of embedded R code, like the document below.  
+
+<https://rmarkdown.rstudio.com/lesson-8.html>.
+
+# ANS_6
+
+```{r}
+library(tidyverse)
+fastfood <-read.csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-09-04/fastfood_calories.csv")
+```
+# ANS_7
+ 
+```{r}
+
+head(fastfood, 10) 
+
+knitr::kable(head(fastfood[, 1:5],10))
+
+```
+
+#Part 2
+
+# ANS_8
+ 
+```{r}
+
+knitr::kable((subset(fastfood, calories>1000)))
+
+```
+
+# ANS_9
+ 
+```{r}
+dont_eat_this<-knitr::kable((subset(fastfood, total_fat>40 & total_carb>80)))
+print(dont_eat_this)
+```
+
+# ANS_10
+```{r}
+heavy_food<-knitr::kable((subset(fastfood, calories>500)) %>%  count(restaurant)) 
+print('Heavy')
+print(heavy_food)
+heavy_food<-knitr::kable((subset(fastfood, calories>250 & calories < 500))%>%  count(restaurant)) 
+print('Average')
+print(heavy_food)
+heavy_food<-knitr::kable((subset(fastfood, calories<250))%>%  count(restaurant)) 
+print('Low')
+print(heavy_food)
+```
+
+# ANS_11
+
+```{r}
+library(skimr)
+skim(fastfood) %>%  summary() 
+```
+
+# ANS_12
+```{r}
+knitr::kable(fastfood %>% group_by(restaurant) %>%  count(restaurant) %>% arrange(desc(n)))
+```
+
+#13
+```{r}
+knitr::kable(fastfood %>% group_by(restaurant) %>% summarise(calories = mean(calories)))
+```
+
+# ANS_14
+```{r}
+average_calories<-knitr::kable(fastfood %>% group_by(restaurant) %>% summarise(calories = mean(calories)))
+print(average_calories)
+max_fat<-knitr::kable(fastfood %>% group_by(restaurant) %>% summarise(total_fat =max(total_fat)))
+print(max_fat)
+min_cholesterol<-knitr::kable(fastfood %>% group_by(restaurant) %>% summarise(cholesterol= min(cholesterol)))
+print(min_cholesterol)
+```
+# ANS_15
+```{r}
+fastfood %>% group_by(restaurant) %>% summarise(total_fat = sum(total_fat)) %>%    
+ggplot() +   aes(x = restaurant, fill = restaurant, weight = total_fat) +   geom_bar() +   scale_fill_hue() +   labs(x = "Restaurant_Type", y = "Total fats", title = "Chart", subtitle = " Fat with respect to Restaurant", caption = "Total Fat with respect to each Restaurant", fill = "Legend")  
+```
+ 
+# ANS_16
+```{r}
+cholesterol_sodium<- fastfood$cholesterol+fastfood$sodium
+fastfood[19]<-cholesterol_sodium
+fastfood <- fastfood[ -c(18) ]
+```
+
+#17
+```{r}
+observations<-head((subset(fastfood, restaurant=='Mcdonalds')),60)
+p<-ggplot(data.frame(observations),aes(sugar, protein)) 
+p+ geom_point()
+```
+#18
+```{r}
+factors1 <- factor(fastfood$restaurant)
+levels(factors1)
+```
+#19
+```{r}
+labels=c("low", "medium", "high")
+calories_type<-cut_number(fastfood$calories,3,labels)
+```
+#20
+```{r}
+fastfood %>% group_by(restaurant) %>%    
+ggplot() +   aes(x = fastfood$restaurant, fill = fastfood$restaurant, weight = calories) +   geom_bar() +   scale_fill_hue() +   labs(x = "Restaurants Type", y = "Calories Type", title = "Calories/ Restaurant", subtitle = "Calories per Restaurant", caption = "Graph for Calories per Restaurant", fill = "Legend")  
+```
+#21
+
+```{r}
+trans_fat_percent<-knitr::kable(fastfood %>% summarise(trans_fat_percent =trans_fat/total_fat*100 ))
+```
+#22
+
+```{r}
+fastfood %>% group_by(restaurant) %>%    
+ggplot() +   aes(x = fastfood$restaurant, fill = fastfood$restaurant, weight = trans_fat) +   geom_bar() +   scale_fill_hue() +   labs(x = "Restaurant", y = "trans_fat", title = "Trans fat per restaurant", subtitle = "trans_fat/Restaurant", caption = "trans_fat/Restaurant", fill = "Legend") 
+```
+#23
+```{r}
+knitr::kable(fastfood %>% group_by(restaurant) %>% summarise(total_fat = mean(total_fat)))
+```
+#24
+```{r}
+fastfood %>% group_by(restaurant) %>%    
+ggplot() +   aes(x = fastfood$restaurant, fill = fastfood$restaurant, weight = total_fat) +   geom_bar() +   scale_fill_hue() +   labs(x = "Restaurant", y = "total_fat", title = "total fat per restaurant", subtitle = "total_fat/Restaurant", caption = "total_fat/Restaurant", fill = "Legend") 
+```
+#end of file
+
+
+
+
+
+
